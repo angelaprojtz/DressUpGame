@@ -2,9 +2,9 @@ let winWidth = 1000;
 let winHeight = 700;
 
 let backgroundImage;
-let dressupDollImage, shirtImage, pantsImage, shoesImage, earmuffsImage;
+let dressupDollImage, shirtImage, pantsImage;
 
-let doll, shirt, pants, shoes, earmuffs;
+let doll, shirt, pants;
 
 let headVector, torsoVector, legsVector, feetVector;
 
@@ -13,8 +13,6 @@ function preload(){
     dressupDollImage = loadImage('/assets/doll.png');
     shirtImage = ('/assets/shirt.png');
     pantsImage = ('/assets/pants.png');
-    shoesImage = ('/assets/shoes.png');
-    earmuffsImage = ('/assets/earmuffs.png');
 }
 
 function setup() {
@@ -40,16 +38,6 @@ function setup() {
   pants.image = pantsImage;
   pants.scale = 0.5; 
   pants.position  = createVector(500, 350);
-
-  shoes = new Sprite();
-  shoes.image = shoesImage;
-  shoes.scale = 0.5; 
-  shoes.position  = createVector(500, 600);
-
-  earmuffs = new Sprite();
-  earmuffs.image = earmuffsImage;
-  earmuffs.scale = 0.5; 
-  earmuffs.position  = createVector(700, 300);
 
   torsoVector = createVector(191, 207);
 
