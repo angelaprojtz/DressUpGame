@@ -1,3 +1,3 @@
 Currently a WIP
 
-Image source (temporary): vectorstock
+-currently missing assets
