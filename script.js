@@ -1,65 +1,67 @@
-let winWidth = 1000;
-let winHeight = 700;
-
+// Demo-based drag/drop implementation adapted to your assets.
 let backgroundImage;
 let dressupDollImage, shirtImage, pantsImage;
-
 let doll, shirt, pants;
+let torsoVector, legsVector;
 
-let headVector, torsoVector, legsVector, feetVector;
-
-function preload(){
-    backgroundImage = loadImage('/assets/background.png');
-    dressupDollImage = loadImage('/assets/doll.png');
-    shirtImage = ('/assets/shirt.png');
-    pantsImage = ('/assets/pants.png');
+function preload() {
+	backgroundImage = loadImage("assets/background.png");
+	dressupDollImage = loadImage("assets/doll.png");
+	shirtImage = loadImage("assets/shirt.png");
+	pantsImage = loadImage("assets/pants.png");
 }
 
 function setup() {
-  let canvas = createCanvas(winWidth, winHeight);
-  
-  image (backgroundImage, 0, 0);
-  allSprites.rotationLock = true;
-  
+	new Canvas(1000, 700);
+	rectMode(CENTER);
+	allSprites.rotationLock = true;
 
-  doll = new Sprite();
-  doll.image = dressupDollImage;
-  doll.scale = 0.5; 
-  doll.position  = createVector(200, 350);
-  doll.collider = 'none';
+	doll = new Sprite();
+	doll.img = dressupDollImage;
+	doll.scale = 0.5;
+	doll.position = createVector(200, 350);
+	doll.collider = "none";
 
-  shirt = new Sprite();
-  shirt.image = shirtImage;
-  shirt.scale = 0.5; 
-  shirt.position  = createVector(500, 100);
-  shirt.drag = 10;
+	shirt = new Sprite();
+	shirt.img = shirtImage;
+	shirt.scale = 0.5;
+	shirt.position = createVector(500, 100);
+	shirt.drag = 10;
 
-  pants = new Sprite();
-  pants.image = pantsImage;
-  pants.scale = 0.5; 
-  pants.position  = createVector(500, 350);
+	pants = new Sprite();
+	pants.img = pantsImage;
+	pants.scale = 0.5;
+	pants.position = createVector(500, 350);
+	pants.drag = 10;
 
-  torsoVector = createVector(191, 207);
-
+	torsoVector = createVector(191, 207);
+	legsVector = createVector(200, 355);
 }
 
 function draw() {
+	background(backgroundImage);
 
-    background(backgroundImage);
+	if (shirt.mouse.dragging()) {
+		shirt.moveTowards(
+			mouse.x + shirt.mouse.x,
+			mouse.y + shirt.mouse.y,
+			1
+		);
+	}
 
-    console.log(`x: ${mouseX}  y: ${mouseY}`);
+	if (pants.mouse.dragging()) {
+		pants.moveTowards(
+			mouse.x + pants.mouse.x,
+			mouse.y + pants.mouse.y,
+			1
+		);
+	}
 
-    if (shirt.mouse.dragging()) {
-        shirt.moveTowards(
-            mouse.x + shirt.mouse.x,
-            mouse.y + shirt.mouse.y,
-            1 // a lower number will track the mouse slower
-        );
-    }
+	if (dist(shirt.x, shirt.y, torsoVector.x, torsoVector.y) < 20) {
+		shirt.position = torsoVector;
+	}
 
-    if (dist(shirt.x,shirt.y,torsoVector.x,torsoVector.y) < 10) {
-        shirt.position = torsoVector;
-    } else { 
-       shirt.position = createVector(500, 100);
-    }
+	if (dist(pants.x, pants.y, legsVector.x, legsVector.y) < 20) {
+		pants.position = legsVector;
+	}
 }
