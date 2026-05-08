@@ -1,4 +1,3 @@
-// Demo-based drag/drop implementation adapted to your assets.
 let backgroundImage;
 let dressupDollImage, shirtImage, pantsImage;
 let doll, shirt, pants;
