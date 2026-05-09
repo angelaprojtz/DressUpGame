@@ -1,6 +1,6 @@
 //https://github.com/FSUdigitalmedia/p5play_dolldemo/tree/main
 let backgroundImage;
-let dressupDollImage, shirtImage, pantsImage;
+let dressupDollImage, shirtImage, pantsImage, shoesImage;
 let doll, shirt, pants;
 let torsoVector, legsVector;
 
@@ -9,6 +9,7 @@ function preload() {
 	dressupDollImage = loadImage("assets/doll.png");
 	shirtImage = loadImage("assets/shirt.png");
 	pantsImage = loadImage("assets/pants.png");
+	shoesImage = loadImage("assets/shoes.png");
 }
 
 function setup() {
@@ -25,24 +26,34 @@ function setup() {
 	shirt = new Sprite();
 	shirt.img = shirtImage;
 	shirt.scale = 0.5;
-	shirt.position = createVector(500, 100);
+	shirt.position = createVector(520, 160);
 	shirt.collider = "dynamic";
 	shirt.drag = 10;
 
 	pants = new Sprite();
 	pants.img = pantsImage;
 	pants.scale = 0.5;
-	pants.position = createVector(500, 350);
+	pants.position = createVector(520, 320);
 	pants.collider = "dynamic";
 	pants.drag = 10;
+
+	shoes = new Sprite();
+	shoes.img = shoesImage;
+	shoes.scale = 0.5;
+	shoes.position = createVector(520, 470);
+	shoes.collider = "dynamic";
+	shoes.drag = 10;
 
 	// Keep colliders for mouse hit detection, but disable physical blocking.
 	shirt.overlaps(pants);
 	shirt.overlaps(doll);
+	pants.overlaps(shoes)
 	pants.overlaps(doll);
+	shoes.overlaps(doll);
 
 	torsoVector = createVector(195, 417);
-	legsVector = createVector(194, 486);
+	legsVector = createVector(195, 486);
+	feetVector = createVector(195, 547);
 
 }
 
@@ -64,6 +75,14 @@ function draw() {
 			1.7
 		);
 	}
+
+	if (shoes.mouse.dragging()) {
+		shoes.moveTowards(
+			mouse.x + shoes.mouse.x,
+			mouse.y + shoes.mouse.y,
+			1.7
+		);
+	}
 }
 
 function mouseReleased(){
@@ -78,8 +97,14 @@ function mouseReleased(){
 		pants.vel.x = 0;
 		pants.vel.y = 0;
 	}	
+
+	if (dist(shoes.x, shoes.y, feetVector.x, feetVector.y) < 225) {
+		shoes.position = feetVector;
+		shoes.vel.x = 0;
+		shoes.vel.y = 0;
+	}	
 }
 
-function mousePressed() {
+function mousePressed() { //for getting coordinates
   console.log("click:", Math.round(mouseX), Math.round(mouseY));
 }
