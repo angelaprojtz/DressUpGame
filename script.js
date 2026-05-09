@@ -25,13 +25,20 @@ function setup() {
 	shirt.img = shirtImage;
 	shirt.scale = 0.5;
 	shirt.position = createVector(500, 100);
+	shirt.collider = "dynamic";
 	shirt.drag = 10;
 
 	pants = new Sprite();
 	pants.img = pantsImage;
 	pants.scale = 0.5;
 	pants.position = createVector(500, 350);
+	pants.collider = "dynamic";
 	pants.drag = 10;
+
+	// Keep colliders for mouse hit detection, but disable physical blocking.
+	shirt.overlaps(pants);
+	shirt.overlaps(doll);
+	pants.overlaps(doll);
 
 	torsoVector = createVector(191, 207);
 	legsVector = createVector(200, 355);
