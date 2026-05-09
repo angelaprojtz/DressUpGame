@@ -1,3 +1,4 @@
+//https://github.com/FSUdigitalmedia/p5play_dolldemo/tree/main
 let backgroundImage;
 let dressupDollImage, shirtImage, pantsImage;
 let doll, shirt, pants;
@@ -40,8 +41,9 @@ function setup() {
 	shirt.overlaps(doll);
 	pants.overlaps(doll);
 
-	torsoVector = createVector(191, 207);
-	legsVector = createVector(200, 355);
+	torsoVector = createVector(195, 417);
+	legsVector = createVector(194, 486);
+
 }
 
 function draw() {
@@ -51,7 +53,7 @@ function draw() {
 		shirt.moveTowards(
 			mouse.x + shirt.mouse.x,
 			mouse.y + shirt.mouse.y,
-			1
+			1.7
 		);
 	}
 
@@ -59,15 +61,25 @@ function draw() {
 		pants.moveTowards(
 			mouse.x + pants.mouse.x,
 			mouse.y + pants.mouse.y,
-			1
+			1.7
 		);
 	}
+}
 
-	if (dist(shirt.x, shirt.y, torsoVector.x, torsoVector.y) < 20) {
+function mouseReleased(){
+	if (dist(shirt.x, shirt.y, torsoVector.x, torsoVector.y) < 225) {
 		shirt.position = torsoVector;
+		shirt.vel.x = 0;
+		shirt.vel.y = 0;
 	}
 
-	if (dist(pants.x, pants.y, legsVector.x, legsVector.y) < 20) {
+	if (dist(pants.x, pants.y, legsVector.x, legsVector.y) < 225) {
 		pants.position = legsVector;
-	}
+		pants.vel.x = 0;
+		pants.vel.y = 0;
+	}	
+}
+
+function mousePressed() {
+  console.log("click:", Math.round(mouseX), Math.round(mouseY));
 }
