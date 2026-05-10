@@ -1,8 +1,8 @@
 //https://github.com/FSUdigitalmedia/p5play_dolldemo/tree/main
 let backgroundImage;
-let dressupDollImage, shirtImage, pantsImage, shoesImage;
-let doll, shirt, pants;
-let torsoVector, legsVector;
+let dressupDollImage, shirtImage, pantsImage, shoesImage, headImage;
+let doll, shirt, pants, shoes, head;
+let torsoVector, legsVector, feetVector, headVector;
 
 function preload() {
 	backgroundImage = loadImage("assets/background.png");
@@ -10,6 +10,7 @@ function preload() {
 	shirtImage = loadImage("assets/shirt.png");
 	pantsImage = loadImage("assets/pants.png");
 	shoesImage = loadImage("assets/shoes.png");
+	headImage = loadImage("assets/head.png");
 }
 
 function setup() {
@@ -26,34 +27,46 @@ function setup() {
 	shirt = new Sprite();
 	shirt.img = shirtImage;
 	shirt.scale = 0.5;
-	shirt.position = createVector(520, 160);
+	shirt.position = createVector(520, 320);
 	shirt.collider = "dynamic";
 	shirt.drag = 10;
 
 	pants = new Sprite();
 	pants.img = pantsImage;
 	pants.scale = 0.5;
-	pants.position = createVector(520, 320);
+	pants.position = createVector(520, 470);
 	pants.collider = "dynamic";
 	pants.drag = 10;
 
 	shoes = new Sprite();
 	shoes.img = shoesImage;
 	shoes.scale = 0.5;
-	shoes.position = createVector(520, 470);
+	shoes.position = createVector(520, 570);
 	shoes.collider = "dynamic";
 	shoes.drag = 10;
+
+	head = new Sprite();
+	head.img = headImage;
+	head.scale = 0.5;
+	head.position = createVector(520, 200);
+	head.collider = "dynamic";
+	head.drag = 10;
 
 	// Keep colliders for mouse hit detection, but disable physical blocking.
 	shirt.overlaps(pants);
 	shirt.overlaps(doll);
+
 	pants.overlaps(shoes)
 	pants.overlaps(doll);
+
 	shoes.overlaps(doll);
+
+	head.overlaps(doll);
 
 	torsoVector = createVector(195, 417);
 	legsVector = createVector(195, 486);
 	feetVector = createVector(195, 547);
+	headVector = createVector(195, 198);
 
 }
 
@@ -83,6 +96,14 @@ function draw() {
 			1.7
 		);
 	}
+
+	if (head.mouse.dragging()) {
+		head.moveTowards(
+			mouse.x + head.mouse.x,
+			mouse.y + head.mouse.y,
+			1.7
+		);
+	}
 }
 
 function mouseReleased(){
@@ -102,6 +123,12 @@ function mouseReleased(){
 		shoes.position = feetVector;
 		shoes.vel.x = 0;
 		shoes.vel.y = 0;
+	}
+	
+	if (dist(head.x, head.y, headVector.x, headVector.y) < 225) {
+		head.position = headVector;
+		head.vel.x = 0;
+		head.vel.y = 0;
 	}	
 }
 
