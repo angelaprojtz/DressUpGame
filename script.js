@@ -1,16 +1,45 @@
 //https://github.com/FSUdigitalmedia/p5play_dolldemo/tree/main
 let backgroundImage;
-let dressupDollImage, shirtImage, pantsImage, shoesImage, headImage;
+let dressupDollImage;
 let doll, shirt, pants, shoes, head;
-let torsoVector, legsVector, feetVector, headVector;
+
+// List of all clothing pieces. Order matters for the numbers below:
+// [0] = shirt, [1] = pants, [2] = shoes, [3] = head
+const clothingArticles = [
+	{	id: "shirt_1",
+		slot: "shirt",
+		imgPath: "assets/shirt.png",
+		startPosition: { x: 520, y: 320 },
+		snapPosition: { x: 195, y: 417 },
+	},
+	{	id: "pants_1",
+		slot: "pants",
+		imgPath: "assets/pants.png",
+		startPosition: { x: 520, y: 470 },
+		snapPosition: { x: 195, y: 486 },
+	},
+	{	id: "shoes_1",
+		slot: "shoes",
+		imgPath: "assets/shoes.png",
+		startPosition: { x: 520, y: 570 },
+		snapPosition: { x: 195, y: 547 },
+	},
+	{	id: "head_1",
+		slot: "head",
+		imgPath: "assets/head.png",
+		startPosition: { x: 520, y: 200 },
+		snapPosition: { x: 195, y: 198 },
+	},
+];
+const currentlyWearing = [];
 
 function preload() {
 	backgroundImage = loadImage("assets/background.png");
 	dressupDollImage = loadImage("assets/doll.png");
-	shirtImage = loadImage("assets/shirt.png");
-	pantsImage = loadImage("assets/pants.png");
-	shoesImage = loadImage("assets/shoes.png");
-	headImage = loadImage("assets/head.png");
+
+	for (const article of clothingArticles) {
+		article.image = loadImage(article.imgPath);
+	}
 }
 
 function setup() {
@@ -24,31 +53,39 @@ function setup() {
 	doll.position = createVector(200, 350);
 	doll.collider = "none";
 
+	const shirtData = clothingArticles[0];
 	shirt = new Sprite();
-	shirt.img = shirtImage;
+	shirt.img = shirtData.image;
+	shirt.def = shirtData;
 	shirt.scale = 0.5;
-	shirt.position = createVector(520, 320);
+	shirt.position = createVector(shirtData.startPosition.x, shirtData.startPosition.y);
 	shirt.collider = "dynamic";
 	shirt.drag = 10;
 
+	const pantsData = clothingArticles[1];
 	pants = new Sprite();
-	pants.img = pantsImage;
+	pants.img = pantsData.image;
+	pants.def = pantsData;
 	pants.scale = 0.5;
-	pants.position = createVector(520, 470);
+	pants.position = createVector(pantsData.startPosition.x, pantsData.startPosition.y);
 	pants.collider = "dynamic";
 	pants.drag = 10;
 
+	const shoesData = clothingArticles[2];
 	shoes = new Sprite();
-	shoes.img = shoesImage;
+	shoes.img = shoesData.image;
+	shoes.def = shoesData;
 	shoes.scale = 0.5;
-	shoes.position = createVector(520, 570);
+	shoes.position = createVector(shoesData.startPosition.x, shoesData.startPosition.y);
 	shoes.collider = "dynamic";
 	shoes.drag = 10;
 
+	const headData = clothingArticles[3];
 	head = new Sprite();
-	head.img = headImage;
+	head.img = headData.image;
+	head.def = headData;
 	head.scale = 0.5;
-	head.position = createVector(520, 200);
+	head.position = createVector(headData.startPosition.x, headData.startPosition.y);
 	head.collider = "dynamic";
 	head.drag = 10;
 
@@ -62,12 +99,6 @@ function setup() {
 	shoes.overlaps(doll);
 
 	head.overlaps(doll);
-
-	torsoVector = createVector(195, 417);
-	legsVector = createVector(195, 486);
-	feetVector = createVector(195, 547);
-	headVector = createVector(195, 198);
-
 }
 
 function draw() {
@@ -106,30 +137,26 @@ function draw() {
 	}
 }
 
-function mouseReleased(){
-	if (dist(shirt.x, shirt.y, torsoVector.x, torsoVector.y) < 225) {
-		shirt.position = torsoVector;
-		shirt.vel.x = 0;
-		shirt.vel.y = 0;
+function mouseReleased() {
+	// Small helper: "when I drop this sprite, snap it to the doll or back to the tray."
+	function snapClothingSprite(clothingSprite) {
+		const clothingData = clothingSprite.def;
+		const snap = clothingData.snapPosition;
+		const start = clothingData.startPosition;
+
+		if (dist(clothingSprite.x, clothingSprite.y, snap.x, snap.y) < 225) {
+			clothingSprite.position = createVector(snap.x, snap.y);
+		} else {
+			clothingSprite.position = createVector(start.x, start.y);
+		}
+		clothingSprite.vel.x = 0;
+		clothingSprite.vel.y = 0;
 	}
 
-	if (dist(pants.x, pants.y, legsVector.x, legsVector.y) < 225) {
-		pants.position = legsVector;
-		pants.vel.x = 0;
-		pants.vel.y = 0;
-	}	
-
-	if (dist(shoes.x, shoes.y, feetVector.x, feetVector.y) < 225) {
-		shoes.position = feetVector;
-		shoes.vel.x = 0;
-		shoes.vel.y = 0;
-	}
-	
-	if (dist(head.x, head.y, headVector.x, headVector.y) < 225) {
-		head.position = headVector;
-		head.vel.x = 0;
-		head.vel.y = 0;
-	}	
+	snapClothingSprite(shirt);
+	snapClothingSprite(pants);
+	snapClothingSprite(shoes);
+	snapClothingSprite(head);
 }
 
 function mousePressed() { //for getting coordinates
