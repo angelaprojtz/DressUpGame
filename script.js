@@ -3,8 +3,6 @@ let backgroundImage;
 let dressupDollImage;
 let doll, shirt, pants, shoes, head;
 
-// List of all clothing pieces. Order matters for the numbers below:
-// [0] = shirt, [1] = pants, [2] = shoes, [3] = head
 const clothingArticles = [
 	{	id: "shirt_1",
 		slot: "shirt",
