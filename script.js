@@ -54,7 +54,7 @@ function setup() {
 	const shirtData = clothingArticles[0];
 	shirt = new Sprite();
 	shirt.img = shirtData.image;
-	shirt.def = shirtData;
+	shirt.articleData = shirtData;
 	shirt.scale = 0.5;
 	shirt.position = createVector(shirtData.startPosition.x, shirtData.startPosition.y);
 	shirt.collider = "dynamic";
@@ -63,7 +63,7 @@ function setup() {
 	const pantsData = clothingArticles[1];
 	pants = new Sprite();
 	pants.img = pantsData.image;
-	pants.def = pantsData;
+	pants.articleData = pantsData;
 	pants.scale = 0.5;
 	pants.position = createVector(pantsData.startPosition.x, pantsData.startPosition.y);
 	pants.collider = "dynamic";
@@ -72,7 +72,7 @@ function setup() {
 	const shoesData = clothingArticles[2];
 	shoes = new Sprite();
 	shoes.img = shoesData.image;
-	shoes.def = shoesData;
+	shoes.articleData = shoesData;
 	shoes.scale = 0.5;
 	shoes.position = createVector(shoesData.startPosition.x, shoesData.startPosition.y);
 	shoes.collider = "dynamic";
@@ -81,25 +81,28 @@ function setup() {
 	const headData = clothingArticles[3];
 	head = new Sprite();
 	head.img = headData.image;
-	head.def = headData;
+	head.articleData = headData;
 	head.scale = 0.5;
 	head.position = createVector(headData.startPosition.x, headData.startPosition.y);
 	head.collider = "dynamic";
 	head.drag = 10;
 
-	// Keep colliders for mouse hit detection, but disable physical blocking.
-	shirt.overlaps(pants);
-	shirt.overlaps(doll);
+	// Overlap fixes so items don't slip and slide during collision
+	const clothingSprites = [shirt, pants, shoes, head];
+	for (const sprite of clothingSprites) {
+		sprite.overlaps(doll);
+	}
 
-	pants.overlaps(shoes)
-	pants.overlaps(doll);
-
-	shoes.overlaps(doll);
-
-	head.overlaps(doll);
+	for (const spriteA of clothingSprites) {
+		for (const spriteB of clothingSprites) {
+			if (spriteA !== spriteB) {
+				spriteA.overlaps(spriteB);
+			}
+		}
+	}
 }
 
-function draw() {
+function draw() { //runs every frame
 	background(backgroundImage);
 
 	if (shirt.mouse.dragging()) {
@@ -136,16 +139,31 @@ function draw() {
 }
 
 function mouseReleased() {
-	// Small helper: "when I drop this sprite, snap it to the doll or back to the tray."
+
 	function snapClothingSprite(clothingSprite) {
-		const clothingData = clothingSprite.def;
+		const clothingData = clothingSprite.articleData;
 		const snap = clothingData.snapPosition;
 		const start = clothingData.startPosition;
 
 		if (dist(clothingSprite.x, clothingSprite.y, snap.x, snap.y) < 225) {
 			clothingSprite.position = createVector(snap.x, snap.y);
+
+			if (!currentlyWearing.includes(clothingData.id)){
+				currentlyWearing.push(clothingData.id);
+			}
+			
+			/*
+			for (const id of currentlyWearing) {
+				console.log("currentlyWearing:", id);
+			}*/
+
 		} else {
 			clothingSprite.position = createVector(start.x, start.y);
+
+			const arrayIndex = currentlyWearing.indexOf(clothingData.id);
+			if (arrayIndex > -1){ // only splice array when item is found
+				currentlyWearing.splice(arrayIndex, 1); // 2nd parameter means remove one item only
+			}
 		}
 		clothingSprite.vel.x = 0;
 		clothingSprite.vel.y = 0;
