@@ -1,6 +1,7 @@
 //https://github.com/FSUdigitalmedia/p5play_dolldemo/tree/main
 let backgroundImage;
 let dressupDollImage;
+let finishButtonImage;
 let doll, shirt, pants, shoes, head;
 
 const clothingArticles = [
@@ -29,11 +30,14 @@ const clothingArticles = [
 		snapPosition: { x: 195, y: 198 },
 	},
 ];
+
+//might need to move into preload?
 const currentlyWearing = [];
 
 function preload() {
 	backgroundImage = loadImage("assets/background.png");
 	dressupDollImage = loadImage("assets/doll.png");
+	finishButtonImage = loadImage("assets/finishbutton.png");
 
 	for (const article of clothingArticles) {
 		article.image = loadImage(article.imgPath);
@@ -50,6 +54,12 @@ function setup() {
 	doll.scale = 0.5;
 	doll.position = createVector(200, 350);
 	doll.collider = "none";
+
+	finish = new Sprite();
+	finish.img = finishButtonImage;
+	finish.position = createVector(190, 50);
+	finish.scale = 0.4;
+	finish.collider = "none";
 
 	const shirtData = clothingArticles[0];
 	shirt = new Sprite();
@@ -87,7 +97,7 @@ function setup() {
 	head.collider = "dynamic";
 	head.drag = 10;
 
-	// Overlap fixes so items don't slip and slide during collision
+	// overlap fixes so items don't slip and slide during collision
 	const clothingSprites = [shirt, pants, shoes, head];
 	for (const sprite of clothingSprites) {
 		sprite.overlaps(doll);
@@ -103,7 +113,7 @@ function setup() {
 }
 
 function draw() { //runs every frame
-	background(backgroundImage);
+	background(backgroundImage); //we have this here so clothes don't leave a trail
 
 	if (shirt.mouse.dragging()) {
 		shirt.moveTowards(
