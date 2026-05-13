@@ -3,8 +3,10 @@ let backgroundImage;
 let dressupDollImage;
 let finishButtonImage;
 let doll, shirt, pants, shoes, head;
+let finish;
+let isOnPlayScreen = true;
 
-const clothingArticles = [
+const clothingArticles = [ //all clothing articles with their respective info
 	{	id: "shirt_1",
 		slot: "shirt",
 		imgPath: "assets/shirt.png",
@@ -32,7 +34,8 @@ const clothingArticles = [
 ];
 
 //might need to move into preload?
-const currentlyWearing = [];
+let currentlyWearing = []; //articles currently snapped on doll
+let clothingSprites = []; //stores clothing sprite objects
 
 function preload() {
 	backgroundImage = loadImage("assets/background.png");
@@ -59,7 +62,7 @@ function setup() {
 	finish.img = finishButtonImage;
 	finish.position = createVector(190, 50);
 	finish.scale = 0.4;
-	finish.collider = "none";
+	finish.collider = "static"; //button stays in place, can't be blocked by clothing articles
 
 	const shirtData = clothingArticles[0];
 	shirt = new Sprite();
@@ -98,7 +101,8 @@ function setup() {
 	head.drag = 10;
 
 	// overlap fixes so items don't slip and slide during collision
-	const clothingSprites = [shirt, pants, shoes, head];
+	clothingSprites = [shirt, pants, shoes, head];
+
 	for (const sprite of clothingSprites) {
 		sprite.overlaps(doll);
 	}
@@ -113,42 +117,80 @@ function setup() {
 }
 
 function draw() { //runs every frame
-	background(backgroundImage); //we have this here so clothes don't leave a trail
+	background(backgroundImage); // clears canvas every frame (play + finish)
 
-	if (shirt.mouse.dragging()) {
-		shirt.moveTowards(
-			mouse.x + shirt.mouse.x,
-			mouse.y + shirt.mouse.y,
-			1.7
-		);
-	}
+	if (isOnPlayScreen) {
 
-	if (pants.mouse.dragging()) {
-		pants.moveTowards(
-			mouse.x + pants.mouse.x,
-			mouse.y + pants.mouse.y,
-			1.7
-		);
-	}
+		shirt.visible = true;
+		pants.visible = true;
+		shoes.visible = true;
+		head.visible = true;
+		finish.visible = true;
 
-	if (shoes.mouse.dragging()) {
-		shoes.moveTowards(
-			mouse.x + shoes.mouse.x,
-			mouse.y + shoes.mouse.y,
-			1.7
-		);
-	}
+		doll.position = createVector(200, 350);
 
-	if (head.mouse.dragging()) {
-		head.moveTowards(
-			mouse.x + head.mouse.x,
-			mouse.y + head.mouse.y,
-			1.7
-		);
+		if (shirt.mouse.dragging()) {
+			shirt.moveTowards(
+				mouse.x + shirt.mouse.x,
+				mouse.y + shirt.mouse.y,
+				1.7
+			);
+		}
+
+		if (pants.mouse.dragging()) {
+			pants.moveTowards(
+				mouse.x + pants.mouse.x,
+				mouse.y + pants.mouse.y,
+				1.7
+			);
+		}
+
+		if (shoes.mouse.dragging()) {
+			shoes.moveTowards(
+				mouse.x + shoes.mouse.x,
+				mouse.y + shoes.mouse.y,
+				1.7
+			);
+		}
+
+		if (head.mouse.dragging()) {
+			head.moveTowards(
+				mouse.x + head.mouse.x,
+				mouse.y + head.mouse.y,
+				1.7
+			);
+		}
+
+		if (finish.mouse.pressing()) { // this takes you to the final finish screen
+
+			isOnPlayScreen = false;
+
+		}
+	} else {
+		doll.position = createVector(200 + 290, 350);
+		doll.visible = true;
+		finish.visible = false;
+
+		for (const sprite of clothingSprites) {
+			const id = sprite.articleData.id;
+			const snap = sprite.articleData.snapPosition;
+
+			if (currentlyWearing.includes(id)) {
+				sprite.visible = true;
+				sprite.position = createVector(snap.x + 290, snap.y);
+				sprite.vel.x = 0;
+				sprite.vel.y = 0;
+			} else {
+				sprite.visible = false;
+			}
+		}
 	}
 }
 
 function mouseReleased() {
+	if (!isOnPlayScreen) {
+		return;
+	}
 
 	function snapClothingSprite(clothingSprite) {
 		const clothingData = clothingSprite.articleData;
