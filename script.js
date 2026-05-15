@@ -1,10 +1,11 @@
 //https://github.com/FSUdigitalmedia/p5play_dolldemo/tree/main
 let backgroundImage;
 let dressupDollImage;
-let finishButtonImage;
+let finishButtonImage, savePresetButtonImage, loadPreInactiveImage, loadPreActiveImage;
 let doll, shirt, pants, shoes, head;
 let finish;
 let isOnPlayScreen = true;
+let presetActivated = false; //false until player saves a set
 
 const clothingArticles = [ //all clothing articles with their respective info
 	{	id: "shirt_1",
@@ -41,6 +42,9 @@ function preload() {
 	backgroundImage = loadImage("assets/background.png");
 	dressupDollImage = loadImage("assets/doll.png");
 	finishButtonImage = loadImage("assets/finishbutton.png");
+	savePresetButtonImage = loadImage("assets/saveprebutton1.png");
+	loadPreInactiveImage = loadImage("assets/loadprenotactive2.png");
+	loadPreActiveImage = loadImage("assets/loadpreactive2.png");
 
 	for (const article of clothingArticles) {
 		article.image = loadImage(article.imgPath);
@@ -57,13 +61,31 @@ function setup() {
 	doll.scale = 0.5;
 	doll.position = createVector(200, 350);
 	doll.collider = "none";
-
+	// ------BUTTONS-------
 	finish = new Sprite();
 	finish.img = finishButtonImage;
 	finish.position = createVector(190, 50);
 	finish.scale = 0.4;
 	finish.collider = "static"; //button stays in place, can't be blocked by clothing articles
 
+	savePreset = new Sprite();
+	savePreset.img = savePresetButtonImage;
+	savePreset.position = createVector(720, 50);
+	savePreset.scale = 0.4;
+	savePreset.collider = "static"; 
+
+	inactivePreset = new Sprite();
+	inactivePreset.img = loadPreInactiveImage;
+	inactivePreset.position = createVector(880, 50);
+	inactivePreset.scale = 0.4;
+	inactivePreset.collider = "static"; 
+	/*
+	activePreset = new Sprite();
+	activePreset.img = loadPreActiveImage;
+	activePreset.position = createVector(190, 50);
+	activePreset.scale = 0.4;
+	activePreset.collider = "static"; */
+	//----------------------
 	const shirtData = clothingArticles[0];
 	shirt = new Sprite();
 	shirt.img = shirtData.image;
