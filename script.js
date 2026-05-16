@@ -5,7 +5,7 @@ let finishButtonImage, savePresetButtonImage, loadPreInactiveImage, loadPreActiv
 let doll, shirt, pants, shoes, head;
 let finish;
 let isOnPlayScreen = true;
-let presetActivated = false; //false until player saves a set
+let presetNeedReset = false;
 
 const clothingArticles = [ //all clothing articles with their respective info
 	{	id: "shirt_1",
@@ -37,6 +37,7 @@ const clothingArticles = [ //all clothing articles with their respective info
 //might need to move into preload?
 let currentlyWearing = []; //articles currently snapped on doll
 let clothingSprites = []; //stores clothing sprite objects
+let preset = []; //stores preset articles
 
 function preload() {
 	backgroundImage = loadImage("assets/background.png");
@@ -79,12 +80,13 @@ function setup() {
 	inactivePreset.position = createVector(880, 50);
 	inactivePreset.scale = 0.4;
 	inactivePreset.collider = "static"; 
-	/*
+	
 	activePreset = new Sprite();
 	activePreset.img = loadPreActiveImage;
-	activePreset.position = createVector(190, 50);
+	activePreset.position = createVector(880, 50);
 	activePreset.scale = 0.4;
-	activePreset.collider = "static"; */
+	activePreset.collider = "static"; 
+	//activePreset.visible = false;
 	//----------------------
 	const shirtData = clothingArticles[0];
 	shirt = new Sprite();
@@ -122,7 +124,7 @@ function setup() {
 	head.collider = "dynamic";
 	head.drag = 10;
 
-	// overlap fixes so items don't slip and slide during collision
+	// overlap fixes so items don't slip and slide during collision-----
 	clothingSprites = [shirt, pants, shoes, head];
 
 	for (const sprite of clothingSprites) {
@@ -136,6 +138,7 @@ function setup() {
 			}
 		}
 	}
+	//----------------------------------------------------------------
 }
 
 function draw() { //runs every frame
@@ -148,6 +151,14 @@ function draw() { //runs every frame
 		shoes.visible = true;
 		head.visible = true;
 		finish.visible = true;
+
+		if (preset.length == 0) { //checks if preset has anything stored or not, if yes, change the button sprite
+			inactivePreset.visible = true;
+			activePreset.visible = false;
+		} else {
+			inactivePreset.visible = false;
+			activePreset.visible = true;
+		}
 
 		doll.position = createVector(200, 350);
 
@@ -181,6 +192,36 @@ function draw() { //runs every frame
 				mouse.y + head.mouse.y,
 				1.7
 			);
+		}
+
+		if (savePreset.mouse.pressing()) {
+			preset = [...currentlyWearing]; // copy array
+		}
+
+		if (activePreset.mouse.pressing()) {
+			currentlyWearing = [...preset];
+
+			//snap onto doll
+			for (const sprite of clothingSprites) {
+				const id = sprite.articleData.id;
+				const snap = sprite.articleData.snapPosition;
+				const start = sprite.articleData.startPosition;
+
+				if (preset.includes(id)) {
+					sprite.position = createVector(snap.x, snap.y);
+					sprite.vel.x = 0;
+					sprite.vel.y = 0;
+				} else {
+					sprite.position = createVector(start.x, start.y);
+					sprite.vel.x = 0;
+					sprite.vel.y = 0;
+				}
+			}
+
+			//preset.length = 0;
+			presetNeedReset = true;
+			activePreset.visible = false;
+			inactivePreset.visible = true;
 		}
 
 		if (finish.mouse.pressing()) { // this takes you to the final finish screen
@@ -247,6 +288,11 @@ function mouseReleased() {
 	snapClothingSprite(pants);
 	snapClothingSprite(shoes);
 	snapClothingSprite(head);
+
+	if (presetNeedReset) {
+		preset.length = 0;
+		presetNeedReset = false;
+	}
 }
 
 function mousePressed() { //for getting coordinates
