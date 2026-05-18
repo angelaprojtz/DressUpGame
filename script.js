@@ -2,7 +2,7 @@
 let backgroundImage;
 let dressupDollImage;
 let finishButtonImage, savePresetButtonImage, loadPreInactiveImage, loadPreActiveImage;
-let decorImage1, decorImage2;
+let decorImage1, decorImage2, startOverButtonImage;
 let doll, shirt, pants, shoes, head;
 let finish;
 let isOnPlayScreen = true;
@@ -47,6 +47,7 @@ function preload() {
 	savePresetButtonImage = loadImage("assets/saveprebutton1.png");
 	loadPreInactiveImage = loadImage("assets/loadprenotactive2.png");
 	loadPreActiveImage = loadImage("assets/loadpreactive2.png");
+	startOverButtonImage = loadImage("assets/startover.png");
 
 	decorImage1 = loadImage("assets/decor1.png");
 	decorImage2 = loadImage("assets/decor2.png");
@@ -102,7 +103,18 @@ function setup() {
 	activePreset.position = createVector(880, 50);
 	activePreset.scale = 0.4;
 	activePreset.collider = "static"; 
-	//activePreset.visible = false;
+
+	startOver = new Sprite();
+	startOver.img = startOverButtonImage;
+	startOver.position = createVector(350, 50);
+	startOver.scale = 0.4;
+	startOver.collider = "static"; 
+
+	startOverFinished = new Sprite();
+	startOverFinished.img = startOverButtonImage;
+	startOverFinished.position = createVector(190, 50);
+	startOverFinished.scale = 0.4;
+	startOverFinished.collider = "static"; 
 	//----------------------
 	const shirtData = clothingArticles[0];
 	shirt = new Sprite();
@@ -167,6 +179,8 @@ function draw() { //runs every frame
 		shoes.visible = true;
 		head.visible = true;
 		finish.visible = true;
+		startOver.visible = true;
+		startOverFinished.visible = false;
 
 		decor1.visible = false;
 		decor2.visible = false;
@@ -255,6 +269,8 @@ function draw() { //runs every frame
 		inactivePreset.visible = false;
 		activePreset.visible = false;
 		savePreset.visible = false;
+		startOver.visible = false;
+		startOverFinished.visible = true;
 
 		decor1.visible = true;
 		decor2.visible = true;
