@@ -1,7 +1,8 @@
-//https://github.com/FSUdigitalmedia/p5play_dolldemo/tree/main
+// Reference: https://github.com/FSUdigitalmedia/p5play_dolldemo/tree/main
 let backgroundImage;
 let dressupDollImage;
 let finishButtonImage, savePresetButtonImage, loadPreInactiveImage, loadPreActiveImage;
+let decorImage1, decorImage2;
 let doll, shirt, pants, shoes, head;
 let finish;
 let isOnPlayScreen = true;
@@ -47,6 +48,9 @@ function preload() {
 	loadPreInactiveImage = loadImage("assets/loadprenotactive2.png");
 	loadPreActiveImage = loadImage("assets/loadpreactive2.png");
 
+	decorImage1 = loadImage("assets/decor1.png");
+	decorImage2 = loadImage("assets/decor2.png");
+
 	for (const article of clothingArticles) {
 		article.image = loadImage(article.imgPath);
 	}
@@ -62,6 +66,18 @@ function setup() {
 	doll.scale = 0.5;
 	doll.position = createVector(200, 350);
 	doll.collider = "none";
+	//-------DECOR--------
+	decor1 = new Sprite();
+	decor1.img = decorImage1;
+	decor1.scale = 0.7;
+	decor1.position = createVector(200, 350);
+	decor1.collider = "none";
+
+	decor2 = new Sprite();
+	decor2.img = decorImage2;
+	decor2.scale = 0.7;
+	decor2.position = createVector(800, 350);
+	decor2.collider = "none";	
 	// ------BUTTONS-------
 	finish = new Sprite();
 	finish.img = finishButtonImage;
@@ -152,6 +168,9 @@ function draw() { //runs every frame
 		head.visible = true;
 		finish.visible = true;
 
+		decor1.visible = false;
+		decor2.visible = false;
+
 		if (preset.length == 0) { //checks if preset has anything stored or not, if yes, change the button sprite
 			inactivePreset.visible = true;
 			activePreset.visible = false;
@@ -230,9 +249,15 @@ function draw() { //runs every frame
 
 		}
 	} else {
-		doll.position = createVector(200 + 290, 350);
+		doll.position = createVector(200 + 310, 350);
 		doll.visible = true;
 		finish.visible = false;
+		inactivePreset.visible = false;
+		activePreset.visible = false;
+		savePreset.visible = false;
+
+		decor1.visible = true;
+		decor2.visible = true;
 
 		for (const sprite of clothingSprites) {
 			const id = sprite.articleData.id;
@@ -240,7 +265,7 @@ function draw() { //runs every frame
 
 			if (currentlyWearing.includes(id)) {
 				sprite.visible = true;
-				sprite.position = createVector(snap.x + 290, snap.y);
+				sprite.position = createVector(snap.x + 310, snap.y);
 				sprite.vel.x = 0;
 				sprite.vel.y = 0;
 			} else {
