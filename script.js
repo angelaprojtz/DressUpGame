@@ -180,7 +180,10 @@ function draw() { //runs every frame
 		head.visible = true;
 		finish.visible = true;
 		startOver.visible = true;
+		savePreset.visible = true;
 		startOverFinished.visible = false;
+		finish.collider = "static";
+		startOverFinished.collider = "none";
 
 		decor1.visible = false;
 		decor2.visible = false;
@@ -257,6 +260,17 @@ function draw() { //runs every frame
 			inactivePreset.visible = true;
 		}
 
+		if (startOver.mouse.pressing()) {
+			currentlyWearing = [];
+
+			for (const sprite of clothingSprites) {
+				const start = sprite.articleData.startPosition;
+				sprite.position = createVector(start.x, start.y);
+				sprite.vel.x = 0;
+				sprite.vel.y = 0;
+			}
+		}
+
 		if (finish.mouse.pressing()) { // this takes you to the final finish screen
 
 			isOnPlayScreen = false;
@@ -271,6 +285,8 @@ function draw() { //runs every frame
 		savePreset.visible = false;
 		startOver.visible = false;
 		startOverFinished.visible = true;
+		finish.collider = "none";
+		startOverFinished.collider = "static";
 
 		decor1.visible = true;
 		decor2.visible = true;
@@ -286,6 +302,19 @@ function draw() { //runs every frame
 				sprite.vel.y = 0;
 			} else {
 				sprite.visible = false;
+			}
+		}
+
+		if (startOverFinished.mouse.pressing()) {
+			isOnPlayScreen = true;
+
+			currentlyWearing = [];
+
+			for (const sprite of clothingSprites) {
+				const start = sprite.articleData.startPosition;
+				sprite.position = createVector(start.x, start.y);
+				sprite.vel.x = 0;
+				sprite.vel.y = 0;
 			}
 		}
 	}
