@@ -7,6 +7,7 @@ let doll, shirt, pants, shoes, head;
 let finish;
 let isOnPlayScreen = true;
 let presetNeedReset = false;
+let bgMusic;
 
 const clothingArticles = [ //all clothing articles with their respective info
 	{	id: "shirt_1",
@@ -48,6 +49,8 @@ function preload() {
 	loadPreInactiveImage = loadImage("assets/loadprenotactive2.png");
 	loadPreActiveImage = loadImage("assets/loadpreactive2.png");
 	startOverButtonImage = loadImage("assets/startover.png");
+
+	bgMusic = loadSound("assets/music.mp3");
 
 	decorImage1 = loadImage("assets/decor1.png");
 	decorImage2 = loadImage("assets/decor2.png");
